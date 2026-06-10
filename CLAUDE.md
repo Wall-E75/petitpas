@@ -98,6 +98,14 @@ Wali apprend TypeScript. Pour chaque type ou interface créé :
 - Utilise `async/await` dans les Server Components pour le fetch de données
 - Nomme les composants en PascalCase, les hooks en camelCase avec préfixe `use`
 
+### 💬 Règles de commentaires
+
+- Ne commenter que ce qui n'est pas évident à la lecture du code
+- Les noms de types, interfaces et variables doivent être suffisamment explicites pour se passer de commentaire
+- Un commentaire explique le **POURQUOI**, jamais le QUOI
+- Pas de séparateurs visuels (tirets, signes `=`...)
+- Les explications pédagogiques se font dans le chat, pas dans le code
+
 ### 🧪 Tests Jest
 
 - Propose des tests pour chaque hook ou fonction utilitaire créé

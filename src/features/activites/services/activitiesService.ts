@@ -36,3 +36,30 @@ export async function getActivitiesByAge(ageInMonths: AgeInMonths): Promise<Acti
     createdAt: new Date(row.created_at),
   }))
 }
+
+export async function getActivityById(id: string): Promise<Activity> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .from('activities')
+    .select('*')
+    .eq('id', id)
+    .single()
+
+  if (error) throw new Error(error.message)
+
+  return {
+    id: data.id,
+    title: data.title,
+    description: data.description,
+    ageMin: data.age_min,
+    ageMax: data.age_max,
+    duration: data.duration,
+    materials: data.materials ?? [],
+    benefits: data.benefits ?? [],
+    difficulty: data.difficulty,
+    imageUrl: data.image_url ?? undefined,
+    isPremium: data.is_premium,
+    createdAt: new Date(data.created_at),
+  }
+}

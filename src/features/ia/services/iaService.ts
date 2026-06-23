@@ -2,12 +2,32 @@ import Anthropic from '@anthropic-ai/sdk'
 import type { Activity } from '@/features/activites/types'
 import type { AgeInMonths } from '@/features/enfant/types'
 
-const client = new Anthropic()
+// TODO: supprimer isMockMode et getMockSuggestion dès que ANTHROPIC_API_KEY est disponible.
+function isMockMode(): boolean {
+  return !process.env.ANTHROPIC_API_KEY || process.env.MOCK_AI === 'true'
+}
+
+async function getMockSuggestion(activity: Activity, ageInMonths: AgeInMonths): Promise<string> {
+  await new Promise<void>((resolve) => setTimeout(resolve, 1000))
+  return (
+    `[MOCK] Pour « ${activity.title} » avec un enfant de ${ageInMonths} mois : ` +
+    `commencez par des sessions courtes de 5 minutes, guidez doucement les gestes, ` +
+    `et célébrez chaque tentative avec enthousiasme !`
+  )
+}
 
 export async function getActivitySuggestion(
   activity: Activity,
   ageInMonths: AgeInMonths
 ): Promise<string> {
+  if (isMockMode()) {
+    return getMockSuggestion(activity, ageInMonths)
+  }
+
+  // Client instancié ici et non au niveau module : new Anthropic() lève une erreur
+  // immédiate si ANTHROPIC_API_KEY est absent, ce qui planterait le serveur même en mock.
+  const client = new Anthropic()
+
   const message = await client.messages.create({
     model: 'claude-sonnet-4-6',
     max_tokens: 512,
@@ -21,7 +41,7 @@ export async function getActivitySuggestion(
 
   const block = message.content[0]
   // Type guard : l'API peut retourner des blocs tool_use ou image, pas seulement du texte
-  if (block.type !== 'text') throw new Error('Réponse inattendue de l\'API Claude')
+  if (block.type !== 'text') throw new Error("Réponse inattendue de l'API Claude")
   return block.text
 }
 

@@ -1,8 +1,8 @@
+import Link from 'next/link'
 import type { Activity, DifficultyLevel } from '@/features/activites/types'
 
-// Pas de 'use client' : ce composant n'a ni state ni event handler.
-// Il sera inclus dans le bundle client car importé par ActivitiesView (Client Component),
-// mais il n'a pas besoin de la directive lui-même.
+// Pas de 'use client' : ni state, ni event handler, ni hook.
+// next/link est utilisable dans les Server Components — il n'exige pas 'use client'.
 
 const difficultyConfig: Record<DifficultyLevel, { label: string; className: string }> = {
   facile: { label: 'Facile', className: 'bg-green-100 text-green-700' },
@@ -25,7 +25,8 @@ export default function ActivityCard({ activity }: Props) {
       : activity.description
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm">
+    <Link href={`/activites/${activity.id}`} className="block">
+    <div className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
       <div className="flex items-start justify-between gap-2">
         <h2 className="text-base font-semibold leading-snug text-zinc-900">
           {activity.title}
@@ -39,5 +40,6 @@ export default function ActivityCard({ activity }: Props) {
 
       <p className="text-xs text-zinc-400">{activity.duration} min</p>
     </div>
+    </Link>
   )
 }

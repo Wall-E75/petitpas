@@ -6,22 +6,28 @@ import type { AgeInMonths } from '@/features/enfant/types'
 // ne savent pas d'où viennent les données — ils appellent cette fonction.
 // C'est le principe de séparation des responsabilités (SOLID — "S").
 
-export async function getActivitiesByAge(ageInMonths: AgeInMonths): Promise<Activity[]> {
-  const supabase = createClient()
+// Forme brute d'une ligne `activities` telle que Supabase la renvoie
+// (snake_case, pas encore mappée vers nos types applicatifs camelCase).
+interface ActivityRow {
+  id: string
+  title: string
+  description: string
+  age_min: number
+  age_max: number
+  duration: number
+  materials: string[] | null
+  benefits: Activity['benefits']
+  difficulty: Activity['difficulty']
+  image_url: string | null
+  is_premium: boolean
+  created_at: string
+}
 
-  const { data, error } = await supabase
-    .from('activities')
-    .select('*')
-    .lte('age_min', ageInMonths)  // age_min <= ageInMonths
-    .gte('age_max', ageInMonths)  // age_max >= ageInMonths
-    .order('created_at', { ascending: false })
-
-  if (error) throw new Error(error.message)
-
-  // La DB stocke en snake_case (age_min, is_premium...).
-  // On mappe vers le camelCase de nos types TypeScript ici,
-  // dans la couche service — pas dans les composants.
-  return (data ?? []).map(row => ({
+// La DB stocke en snake_case (age_min, is_premium...). On mappe vers le
+// camelCase de nos types TypeScript ici, une seule fois, dans la couche
+// service — pas dans les composants, et pas dupliqué à chaque requête.
+function mapRowToActivity(row: ActivityRow): Activity {
+  return {
     id: row.id,
     title: row.title,
     description: row.description,
@@ -34,7 +40,22 @@ export async function getActivitiesByAge(ageInMonths: AgeInMonths): Promise<Acti
     imageUrl: row.image_url ?? undefined,
     isPremium: row.is_premium,
     createdAt: new Date(row.created_at),
-  }))
+  }
+}
+
+export async function getActivitiesByAge(ageInMonths: AgeInMonths): Promise<Activity[]> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .from('activities')
+    .select('*')
+    .lte('age_min', ageInMonths)  // age_min <= ageInMonths
+    .gte('age_max', ageInMonths)  // age_max >= ageInMonths
+    .order('created_at', { ascending: false })
+
+  if (error) throw new Error(error.message)
+
+  return (data ?? []).map(mapRowToActivity)
 }
 
 export async function getActivityById(id: string): Promise<Activity> {
@@ -48,18 +69,20 @@ export async function getActivityById(id: string): Promise<Activity> {
 
   if (error) throw new Error(error.message)
 
-  return {
-    id: data.id,
-    title: data.title,
-    description: data.description,
-    ageMin: data.age_min,
-    ageMax: data.age_max,
-    duration: data.duration,
-    materials: data.materials ?? [],
-    benefits: data.benefits ?? [],
-    difficulty: data.difficulty,
-    imageUrl: data.image_url ?? undefined,
-    isPremium: data.is_premium,
-    createdAt: new Date(data.created_at),
-  }
+  return mapRowToActivity(data)
+}
+
+export async function getActivitiesByIds(ids: string[]): Promise<Activity[]> {
+  if (ids.length === 0) return []
+
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .from('activities')
+    .select('*')
+    .in('id', ids)
+
+  if (error) throw new Error(error.message)
+
+  return (data ?? []).map(mapRowToActivity)
 }

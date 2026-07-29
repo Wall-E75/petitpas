@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { Activity, DifficultyLevel } from '@/features/activites/types'
+import FavoriteButton from '@/features/activites/components/FavoriteButton'
 
 // Pas de 'use client' : ni state, ni event handler, ni hook.
 // next/link est utilisable dans les Server Components — il n'exige pas 'use client'.
@@ -31,9 +32,12 @@ export default function ActivityCard({ activity }: Props) {
         <h2 className="text-base font-semibold leading-snug text-zinc-900">
           {activity.title}
         </h2>
-        <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${className}`}>
-          {label}
-        </span>
+        <div className="flex shrink-0 items-center gap-2">
+          <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${className}`}>
+            {label}
+          </span>
+          <FavoriteButton activityId={activity.id} />
+        </div>
       </div>
 
       <p className="text-sm leading-relaxed text-zinc-600">{description}</p>

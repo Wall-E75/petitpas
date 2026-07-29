@@ -1,4 +1,5 @@
 import type { Activity, DifficultyLevel, DevelopmentArea } from '@/features/activites/types'
+import FavoriteButton from '@/features/activites/components/FavoriteButton'
 
 const difficultyConfig: Record<DifficultyLevel, { label: string; className: string }> = {
   facile: { label: 'Facile', className: 'bg-green-100 text-green-700' },
@@ -25,7 +26,10 @@ export default function ActivityDetails({ activity }: Props) {
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
       <div className="flex items-start justify-between gap-4 mb-2">
-        <h1 className="text-2xl font-bold text-zinc-900">{activity.title}</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-zinc-900">{activity.title}</h1>
+          <FavoriteButton activityId={activity.id} />
+        </div>
         <span className={`shrink-0 rounded-full px-3 py-1 text-sm font-medium ${className}`}>
           {label}
         </span>

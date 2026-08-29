@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import BottomTabBar from '@/shared/components/BottomTabBar'
+import PageTransition from '@/shared/components/PageTransition'
 
 // Server Component (défaut Next.js) — pas de 'use client'.
 // Ce layout s'applique à toutes les pages du groupe de routes (app).
@@ -7,9 +8,9 @@ import BottomTabBar from '@/shared/components/BottomTabBar'
 // app/(app)/page.tsx → route "/"
 // app/(app)/profil/page.tsx → route "/profil"
 //
-// BottomTabBar est un Client Component (usePathname), mais l'imbriquer ici
-// ne force pas AppLayout à devenir client : seule la frontière déclarée par
-// 'use client' dans BottomTabBar.tsx bascule côté client.
+// BottomTabBar et PageTransition sont des Client Components (usePathname),
+// mais les imbriquer ici ne force pas AppLayout à devenir client : seule la
+// frontière déclarée par 'use client' dans ces fichiers bascule côté client.
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -21,7 +22,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <Link href="/favoris" className="hover:text-zinc-900">Favoris</Link>
         </nav>
       </header>
-      <main className="mx-auto max-w-5xl px-4 py-8 pb-24 md:pb-8">{children}</main>
+      <main className="mx-auto max-w-5xl px-4 py-8 pb-24 md:pb-8">
+        <PageTransition>{children}</PageTransition>
+      </main>
       <BottomTabBar />
     </div>
   )

@@ -12,12 +12,32 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteName = "PetitsPas";
+const siteDescription = "Des activités adaptées à l'âge exact de votre enfant";
+
 export const metadata: Metadata = {
-  title: "PetitsPas",
-  description: "Des activités adaptées à l'âge exact de votre enfant",
+  // metadataBase compose les champs d'URL (ex: openGraph.images) en URLs
+  // absolues à partir de chemins relatifs — obligatoire pour les bots sociaux,
+  // qui n'acceptent pas d'URL relative. NEXT_PUBLIC_SITE_URL sera à définir
+  // en variable d'environnement de prod ; fallback localhost pour le dev local.
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  title: siteName,
+  description: siteDescription,
   manifest: "/manifest.json",
   icons: {
     apple: "/icons/icon-192x192.png",
+  },
+  // openGraph est un objet distinct de title/description : il pilote les
+  // balises og:* lues par les bots de prévisualisation sociale (Facebook,
+  // LinkedIn, Slack...), pas les moteurs de recherche. Les pages enfants
+  // (ex: activités) hériteront de ces valeurs sauf si elles définissent
+  // leur propre openGraph — voir la doc "Merging" de generateMetadata.
+  openGraph: {
+    title: siteName,
+    description: siteDescription,
+    siteName,
+    locale: "fr_FR",
+    type: "website",
   },
 };
 

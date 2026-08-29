@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { createClient } from '@/shared/lib/supabase'
 import type { Activity } from '@/features/activites/types'
 import type { AgeInMonths } from '@/features/enfant/types'
@@ -58,7 +59,11 @@ export async function getActivitiesByAge(ageInMonths: AgeInMonths): Promise<Acti
   return (data ?? []).map(mapRowToActivity)
 }
 
-export async function getActivityById(id: string): Promise<Activity> {
+// cache() mémorise le résultat pour la durée d'un seul rendu serveur (pas
+// entre requêtes différentes). Utile ici car generateMetadata et la page
+// elle-même appellent getActivityById avec le même id — sans cache(), ça
+// ferait deux requêtes Supabase identiques pour une seule visite de page.
+export const getActivityById = cache(async function getActivityById(id: string): Promise<Activity> {
   const supabase = createClient()
 
   const { data, error } = await supabase
@@ -70,7 +75,7 @@ export async function getActivityById(id: string): Promise<Activity> {
   if (error) throw new Error(error.message)
 
   return mapRowToActivity(data)
-}
+})
 
 export async function getActivitiesByIds(ids: string[]): Promise<Activity[]> {
   if (ids.length === 0) return []

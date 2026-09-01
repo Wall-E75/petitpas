@@ -10,7 +10,8 @@ portfolio project and as the foundation for a future commercial product.
 
 ## Demo
 
-<!-- TODO: add a screenshot or GIF of the onboarding + activities flow here -->
+![alt text](image.png)
+![alt text](image-1.png)
 
 ---
 

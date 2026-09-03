@@ -2,14 +2,22 @@ import { renderHook, waitFor, act } from '@testing-library/react'
 import { useFavorites } from './useFavorites'
 import { useFavoritesStore } from '@/store/favoritesStore'
 import { getFavorites, addFavorite } from '../services/favoritesService'
+import { createClient } from '@/shared/lib/supabase'
 
 // On mocke uniquement le service (la frontière avec Supabase), pas le store :
 // useFavorites n'a de sens que branché sur le vrai store Zustand, donc on
 // teste l'intégration hook ↔ store, comme dans favoritesStore.test.ts.
 jest.mock('../services/favoritesService')
 
+// Le store résout le userId via createClient().auth.getSession() : on simule
+// une session valide pour tous les tests de ce fichier.
+jest.mock('../../../shared/lib/supabase')
+
 const mockedGetFavorites = getFavorites as jest.MockedFunction<typeof getFavorites>
 const mockedAddFavorite = addFavorite as jest.MockedFunction<typeof addFavorite>
+const mockedCreateClient = createClient as jest.MockedFunction<typeof createClient>
+
+const mockGetSession = jest.fn()
 
 // Le store Zustand est un singleton partagé entre tous les tests : on le
 // remet à son état initial avant chaque test pour éviter qu'un favori ajouté
@@ -19,6 +27,10 @@ const initialState = useFavoritesStore.getState()
 beforeEach(() => {
   useFavoritesStore.setState(initialState, true)
   jest.resetAllMocks()
+  mockedCreateClient.mockReturnValue({
+    auth: { getSession: mockGetSession },
+  } as unknown as ReturnType<typeof createClient>)
+  mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'user-123' } } } })
 })
 
 describe('useFavorites', () => {
@@ -58,7 +70,7 @@ describe('useFavorites', () => {
       })
 
       expect(result.current.isFavorite('activity-1')).toBe(true)
-      expect(mockedAddFavorite).toHaveBeenCalledWith('anonymous', 'activity-1')
+      expect(mockedAddFavorite).toHaveBeenCalledWith('user-123', 'activity-1')
     })
   })
 })

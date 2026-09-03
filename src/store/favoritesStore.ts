@@ -1,9 +1,15 @@
 import { create } from 'zustand'
 import { getFavorites, addFavorite, removeFavorite } from '@/features/favoris/services/favoritesService'
+import { createClient } from '@/shared/lib/supabase'
 
-// MVP sans auth complète : userId fixe. À remplacer par l'id de l'utilisateur
-// Supabase Auth connecté une fois l'authentification branchée sur le projet.
-const TEMP_USER_ID = 'anonymous'
+// Le store est le seul endroit qui connaît l'identité de l'utilisateur.
+// Les composants et le service restent ignorants de la session : ils
+// reçoivent (ou non) un userId déjà résolu.
+async function getCurrentUserId(): Promise<string | null> {
+  const supabase = createClient()
+  const { data: { session } } = await supabase.auth.getSession()
+  return session?.user.id ?? null
+}
 
 interface FavoritesStore {
   favorites: string[]
@@ -27,8 +33,18 @@ export const useFavoritesStore = create<FavoritesStore>((set, get) => ({
     if (get().hasLoaded || get().isLoading) return
 
     set({ isLoading: true, error: null })
+
+    // Sans session, il n'y a rien à charger : on repart d'une liste vide
+    // sans marquer hasLoaded, pour qu'une connexion ultérieure déclenche
+    // un vrai chargement.
+    const userId = await getCurrentUserId()
+    if (!userId) {
+      set({ favorites: [], isLoading: false })
+      return
+    }
+
     try {
-      const data = await getFavorites(TEMP_USER_ID)
+      const data = await getFavorites(userId)
       set({ favorites: data, isLoading: false, hasLoaded: true })
     } catch (err) {
       set({ error: err instanceof Error ? err.message : 'Erreur inattendue', isLoading: false })
@@ -36,6 +52,11 @@ export const useFavoritesStore = create<FavoritesStore>((set, get) => ({
   },
 
   toggleFavorite: async (activityId) => {
+    // Un favori est toujours rattaché à un utilisateur : sans session,
+    // l'action n'a pas de sens et on sort avant tout changement de state.
+    const userId = await getCurrentUserId()
+    if (!userId) return
+
     const wasFavorite = get().favorites.includes(activityId)
 
     // Optimistic update : on met à jour le store avant même la réponse
@@ -49,9 +70,9 @@ export const useFavoritesStore = create<FavoritesStore>((set, get) => ({
 
     try {
       if (wasFavorite) {
-        await removeFavorite(TEMP_USER_ID, activityId)
+        await removeFavorite(userId, activityId)
       } else {
-        await addFavorite(TEMP_USER_ID, activityId)
+        await addFavorite(userId, activityId)
       }
     } catch (err) {
       // Rollback si Supabase échoue : on remet le state comme avant le clic

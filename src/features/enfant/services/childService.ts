@@ -4,14 +4,15 @@ import type { ChildFormData, ChildProfile } from '@/features/enfant/types'
 export async function saveChild(data: ChildFormData): Promise<ChildProfile> {
   const supabase = createClient()
 
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) throw new Error('Utilisateur non connecté')
+
   const { data: row, error } = await supabase
     .from('children')
     .insert({
       name: data.name,
       birth_date: data.birthDate,
-      // user_id sera ajouté quand l'authentification Supabase sera implémentée.
-      // Sans ça, l'insert échouera si la colonne a une contrainte NOT NULL.
-      // Pour le MVP : désactivez RLS sur la table children dans le dashboard Supabase.
+      user_id: session.user.id,
     })
     .select()
     .single()

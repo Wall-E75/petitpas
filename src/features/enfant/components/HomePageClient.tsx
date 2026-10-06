@@ -4,14 +4,56 @@
 // Le serveur ne peut pas savoir si un enfant est configuré — cette décision
 // appartient au navigateur, où Zustand vit.
 
+import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useChildStore } from '@/store/childStore'
 import { useAgeInMonths } from '@/features/enfant/hooks/useAgeInMonths'
+import { getChildByUserId } from '@/features/enfant/services/childService'
+import { getCurrentUserId } from '@/shared/lib/auth'
 import OnboardingForm from '@/features/enfant/components/OnboardingForm'
 import ActivitiesView from '@/features/activites/components/ActivitiesView'
 
 export default function HomePageClient() {
   const child = useChildStore((state) => state.child)
+  const setChild = useChildStore((state) => state.setChild)
+
+  // Initialisé à true seulement si le store est vide : sans cet état,
+  // l'onboarding s'afficherait le temps de la requête avant de basculer.
+  const [isLoading, setIsLoading] = useState(child === null)
+
+  useEffect(() => {
+    // Le store survit à la navigation client : inutile de refetch si un
+    // enfant est déjà là (ex. retour depuis /favoris, ou juste après l'onboarding).
+    if (child) return
+
+    let cancelled = false
+
+    async function loadChild() {
+      try {
+        const userId = await getCurrentUserId()
+        if (!userId) return
+        const profile = await getChildByUserId(userId)
+        if (!cancelled && profile) setChild(profile)
+      } catch (err) {
+        // Un échec de chargement ne doit pas bloquer l'utilisateur :
+        // il retombe sur l'onboarding plutôt que sur un écran vide.
+        console.error(err)
+      } finally {
+        if (!cancelled) setIsLoading(false)
+      }
+    }
+
+    loadChild()
+
+    // Évite un setState après démontage (ou lors du double montage du Strict Mode).
+    return () => {
+      cancelled = true
+    }
+  }, [child, setChild])
+
+  if (isLoading && !child) {
+    return <p className="text-sm text-zinc-500">Chargement…</p>
+  }
 
   // AnimatePresence anime aussi les sorties : sans lui, OnboardingForm
   // disparaîtrait du DOM instantanément dès que `child` devient non-null,

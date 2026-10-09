@@ -22,6 +22,14 @@ export async function signUp({ email, password }: AuthCredentials): Promise<void
   if (error) throw new Error(translateAuthError(error.message))
 }
 
+export async function signOut(): Promise<void> {
+  const supabase = createClient()
+
+  const { error } = await supabase.auth.signOut()
+
+  if (error) throw new Error(translateAuthError(error.message))
+}
+
 // Supabase renvoie ses messages en anglais. On traduit les cas les plus
 // fréquents ; le reste passe tel quel plutôt que d'afficher un message
 // générique qui masquerait l'info utile.

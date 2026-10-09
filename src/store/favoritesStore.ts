@@ -18,6 +18,7 @@ interface FavoritesStore {
   hasLoaded: boolean
   loadFavorites: () => Promise<void>
   toggleFavorite: (activityId: string) => Promise<void>
+  clearFavorites: () => void
 }
 
 export const useFavoritesStore = create<FavoritesStore>((set, get) => ({
@@ -84,4 +85,8 @@ export const useFavoritesStore = create<FavoritesStore>((set, get) => ({
       }))
     }
   },
+
+  // hasLoaded doit repasser à false : sinon loadFavorites() court-circuiterait
+  // le chargement du prochain utilisateur connecté et afficherait une liste vide.
+  clearFavorites: () => set({ favorites: [], hasLoaded: false, error: null }),
 }))

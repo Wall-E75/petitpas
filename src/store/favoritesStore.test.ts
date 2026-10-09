@@ -133,4 +133,27 @@ describe('favoritesStore', () => {
       expect(useFavoritesStore.getState().error).toBe('Erreur réseau')
     })
   })
+
+  describe('clearFavorites', () => {
+    it('vide la liste et remet hasLoaded à false', () => {
+      useFavoritesStore.setState({ favorites: ['activity-1'], hasLoaded: true })
+
+      useFavoritesStore.getState().clearFavorites()
+
+      expect(useFavoritesStore.getState().favorites).toEqual([])
+      expect(useFavoritesStore.getState().hasLoaded).toBe(false)
+    })
+
+    it('permet un nouveau chargement après le reset', async () => {
+      mockedGetFavorites.mockResolvedValue(['activity-1'])
+      await useFavoritesStore.getState().loadFavorites()
+
+      useFavoritesStore.getState().clearFavorites()
+      mockedGetFavorites.mockResolvedValue(['activity-2'])
+      await useFavoritesStore.getState().loadFavorites()
+
+      expect(mockedGetFavorites).toHaveBeenCalledTimes(2)
+      expect(useFavoritesStore.getState().favorites).toEqual(['activity-2'])
+    })
+  })
 })

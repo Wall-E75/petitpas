@@ -1,10 +1,10 @@
-import Anthropic from '@anthropic-ai/sdk'
+import Groq from 'groq-sdk'
 import type { Activity } from '@/features/activites/types'
 import type { AgeInMonths } from '@/features/enfant/types'
 
-// TODO: supprimer isMockMode et getMockSuggestion dès que ANTHROPIC_API_KEY est disponible.
+// MOCK_AI=true permet de développer l'UI sans consommer le quota Groq.
 function isMockMode(): boolean {
-  return !process.env.ANTHROPIC_API_KEY || process.env.MOCK_AI === 'true'
+  return !process.env.GROQ_API_KEY || process.env.MOCK_AI === 'true'
 }
 
 async function getMockSuggestion(activity: Activity, ageInMonths: AgeInMonths): Promise<string> {
@@ -24,13 +24,18 @@ export async function getActivitySuggestion(
     return getMockSuggestion(activity, ageInMonths)
   }
 
-  // Client instancié ici et non au niveau module : new Anthropic() lève une erreur
-  // immédiate si ANTHROPIC_API_KEY est absent, ce qui planterait le serveur même en mock.
-  const client = new Anthropic()
+  // Client instancié ici et non au niveau module : new Groq() lève une erreur
+  // immédiate si GROQ_API_KEY est absent, ce qui planterait le serveur même en mock.
+  const client = new Groq()
 
-  const message = await client.messages.create({
-    model: 'claude-sonnet-4-6',
+  const completion = await client.chat.completions.create({
+    model: 'openai/gpt-oss-120b',
     max_tokens: 512,
+    // gpt-oss raisonne avant de répondre et ce raisonnement consomme max_tokens :
+    // un effort bas laisse la place à la réponse, et on ne renvoie pas le
+    // raisonnement au client, il n'est pas destiné aux parents.
+    reasoning_effort: 'low',
+    include_reasoning: false,
     messages: [
       {
         role: 'user',
@@ -39,10 +44,9 @@ export async function getActivitySuggestion(
     ],
   })
 
-  const block = message.content[0]
-  // Type guard : l'API peut retourner des blocs tool_use ou image, pas seulement du texte
-  if (block.type !== 'text') throw new Error("Réponse inattendue de l'API Claude")
-  return block.text
+  const content = completion.choices[0]?.message.content
+  if (!content) throw new Error("Réponse vide de l'API Groq")
+  return content
 }
 
 function buildPrompt(activity: Activity, ageInMonths: AgeInMonths): string {

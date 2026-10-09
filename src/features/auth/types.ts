@@ -13,3 +13,8 @@ export interface AuthCredentials {
 export type RegisterFormData = AuthCredentials & {
   confirmPassword: string
 }
+
+// Union plutôt que `string` : TypeScript refusera `signInWithOAuth('gogle')`.
+// Ajouter GitHub plus tard = ajouter `| 'github'` ici, rien d'autre à changer
+// dans le service.
+export type OAuthProvider = 'google'

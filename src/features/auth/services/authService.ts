@@ -1,5 +1,5 @@
 import { createClient } from '@/shared/lib/supabase'
-import type { AuthCredentials } from '@/features/auth/types'
+import type { AuthCredentials, OAuthProvider } from '@/features/auth/types'
 
 // Même rôle que activitiesService / favoritesService : ce fichier est le seul
 // à connaître l'API `supabase.auth`. Les hooks appellent ces fonctions sans
@@ -18,6 +18,24 @@ export async function signUp({ email, password }: AuthCredentials): Promise<void
   const supabase = createClient()
 
   const { error } = await supabase.auth.signUp({ email, password })
+
+  if (error) throw new Error(translateAuthError(error.message))
+}
+
+// Pas de session en retour : Supabase redirige le navigateur vers le
+// provider. La session n'existera qu'au retour, dans /auth/callback.
+export async function signInWithOAuth(provider: OAuthProvider): Promise<void> {
+  const supabase = createClient()
+
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: {
+      // L'origine est lue à l'exécution pour que la même build fonctionne en
+      // local et en production. Cette URL doit figurer dans les "Redirect URLs"
+      // du dashboard Supabase, sinon Supabase la remplace par la Site URL.
+      redirectTo: `${window.location.origin}/auth/callback`,
+    },
+  })
 
   if (error) throw new Error(translateAuthError(error.message))
 }

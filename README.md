@@ -1,7 +1,7 @@
 # PetitsPas 🌱
 
 **PetitsPas** is a web app that suggests activities precisely matched to a child's age
-in months, with AI-personalized tips powered by the Claude API. It was built both as a
+in months, with AI-personalized tips powered by Groq. It was built both as a
 portfolio project and as the foundation for a future commercial product.
 
 **Live demo:** [petitpas-rho.vercel.app](https://petitpas-rho.vercel.app/)
@@ -22,7 +22,7 @@ portfolio project and as the foundation for a future commercial product.
   derives their age in months and uses it everywhere activities are filtered.
 - **Age-appropriate activity feed** — activities are filtered server-side by
   `ageMin`/`ageMax`, with difficulty levels (`facile` / `moyen` / `avance`).
-- **AI-personalized suggestions** — a "get a suggestion" action calls the Claude API
+- **AI-personalized suggestions** — a "get a suggestion" action calls an LLM via Groq
   to generate concrete, age-adapted tips for a given activity (with a mock mode for
   local development without an API key).
 - **Favorites** — save activities for quick access later, persisted per user.
@@ -42,7 +42,7 @@ portfolio project and as the foundation for a future commercial product.
 | **TypeScript (strict)** | Catches shape mismatches (e.g. Supabase snake_case rows vs. app camelCase models) at compile time instead of in production. |
 | **Supabase (Auth + PostgreSQL)** | Managed Postgres with built-in auth, avoiding the cost of running/maintaining a separate backend for a portfolio-scale project. |
 | **Zustand** | Minimal global state (current child, favorites) without Redux-level boilerplate; selectors keep re-renders scoped to what actually changed. |
-| **Claude API** | Generates natural-language, context-aware suggestions per activity and child age — the core differentiator of the app. |
+| **Groq (`openai/gpt-oss-120b`)** | Generates natural-language, context-aware suggestions per activity and child age — the core differentiator of the app. Groq's fast inference keeps the suggestion wait short, and its free tier fits a portfolio-scale project. |
 | **Tailwind CSS v4** | Utility-first styling keeps components self-contained and avoids a growing, hard-to-track CSS file. |
 | **Framer Motion** | Declarative enter/exit animations for route and state transitions without hand-rolled CSS transitions. |
 | **Jest + Testing Library** | Unit tests target business logic (hooks, services, stores) — the parts most likely to break silently. |
@@ -64,7 +64,7 @@ src/
 │   │   ├── page.tsx         # Home (onboarding or activities list)
 │   │   ├── activites/[id]/  # Activity detail page
 │   │   └── favoris/         # Favorites page
-│   ├── api/suggestions/     # API route: Claude suggestion endpoint
+│   ├── api/suggestions/     # API route: AI suggestion endpoint
 │   ├── layout.tsx           # Root layout (fonts, global metadata)
 │   └── not-found.tsx        # Global 404 page
 │
@@ -72,7 +72,7 @@ src/
 │   ├── activites/            # Activities: types, services, hooks, components
 │   ├── enfant/                # Child profile & onboarding
 │   ├── favoris/                # Favorites
-│   └── ia/                      # AI suggestion feature (Claude API)
+│   └── ia/                      # AI suggestion feature (Groq)
 │       ├── components/        # UI only
 │       ├── hooks/              # Business logic
 │       ├── services/           # API / DB calls
@@ -93,7 +93,7 @@ src/
 
 - Node.js 22
 - A [Supabase](https://supabase.com) project (free tier is enough)
-- An [Anthropic API key](https://console.anthropic.com) (optional — the app runs in
+- A [Groq API key](https://console.groq.com/keys) (optional — the app runs in
   mock mode without one)
 
 ### Installation
@@ -112,8 +112,8 @@ Create a `.env.local` file at the project root:
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-project-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key   # used by the DB seed script only
-ANTHROPIC_API_KEY=your-anthropic-api-key                   # optional
-MOCK_AI=true                                                # set to skip real Claude calls
+GROQ_API_KEY=your-groq-api-key                             # optional
+MOCK_AI=true                                                # set to skip real Groq calls
 ```
 
 ### Database

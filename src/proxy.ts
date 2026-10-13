@@ -50,8 +50,9 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Le proxy ne s'exécute QUE sur ces routes. `/`, `/login` et `/register`
-  // n'y figurent pas : ils restent accessibles sans session. Ajouter une
-  // route protégée = ajouter un motif ici.
-  matcher: ['/activites/:path*', '/favoris/:path*'],
+  // Le proxy ne s'exécute QUE sur ces routes. `/login`, `/register` et
+  // `/auth/callback` n'y figurent pas : ils restent accessibles sans session.
+  // `/` est protégée car l'onboarding a besoin d'un user_id pour enregistrer
+  // l'enfant. Ajouter une route protégée = ajouter un motif ici.
+  matcher: ['/', '/activites/:path*', '/favoris/:path*'],
 }

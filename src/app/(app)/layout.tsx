@@ -2,6 +2,7 @@ import Link from 'next/link'
 import BottomTabBar from '@/shared/components/BottomTabBar'
 import PageTransition from '@/shared/components/PageTransition'
 import LogoutButton from '@/features/auth/components/LogoutButton'
+import { getCurrentUserId } from '@/features/auth/services/authServerService'
 
 // Server Component (défaut Next.js) — pas de 'use client'.
 // Ce layout s'applique à toutes les pages du groupe de routes (app).
@@ -13,7 +14,9 @@ import LogoutButton from '@/features/auth/components/LogoutButton'
 // mais les imbriquer ici ne force pas AppLayout à devenir client : seule la
 // frontière déclarée par 'use client' dans ces fichiers bascule côté client.
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+export default async function AppLayout({ children }: { children: React.ReactNode }) {
+  const userId = await getCurrentUserId()
+
   return (
     <div className="min-h-screen bg-canvas">
       <header className="flex items-center justify-between border-b border-line bg-surface px-4 py-3">
@@ -23,7 +26,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <Link href="/" className="hover:text-fg">Activités</Link>
             <Link href="/favoris" className="hover:text-fg">Favoris</Link>
           </nav>
-          <LogoutButton />
+          {userId ? (
+            <LogoutButton />
+          ) : (
+            <Link href="/login" className="text-sm font-medium text-link hover:text-link-hover">
+              Se connecter
+            </Link>
+          )}
         </div>
       </header>
       <main className="mx-auto max-w-5xl px-4 py-8 pb-24 md:pb-8">

@@ -5,6 +5,10 @@ import { createServerClient } from '@supabase/ssr'
 // fonctionnement, exécution sur le serveur avant le rendu de la route. Le
 // fichier vit à la racine de `src/`, jamais dans `src/app/`.
 
+// `/` n'y figure pas : les visiteurs non connectés y voient des activités
+// pour un âge par défaut (accès freemium).
+const PROTECTED_PREFIXES = ['/activites', '/favoris'] as const
+
 export async function proxy(request: NextRequest) {
   // Réponse par défaut : la requête suit son cours. On la réassigne seulement
   // si Supabase renvoie un cookie de session rafraîchi (voir setAll).
@@ -42,7 +46,11 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (!user) {
+  const isProtected = PROTECTED_PREFIXES.some(prefix =>
+    request.nextUrl.pathname.startsWith(prefix)
+  )
+
+  if (!user && isProtected) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
@@ -52,7 +60,8 @@ export async function proxy(request: NextRequest) {
 export const config = {
   // Le proxy ne s'exécute QUE sur ces routes. `/login`, `/register` et
   // `/auth/callback` n'y figurent pas : ils restent accessibles sans session.
-  // `/` est protégée car l'onboarding a besoin d'un user_id pour enregistrer
-  // l'enfant. Ajouter une route protégée = ajouter un motif ici.
+  // `/` y reste, sans redirection, pour que le cookie de session y soit
+  // rafraîchi : un Server Component ne peut pas le faire lui-même.
+  // Ajouter une route protégée = l'ajouter ici ET dans PROTECTED_PREFIXES.
   matcher: ['/', '/activites/:path*', '/favoris/:path*'],
 }

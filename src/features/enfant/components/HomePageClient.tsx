@@ -5,26 +5,33 @@
 // appartient au navigateur, où Zustand vit.
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useChildStore } from '@/store/childStore'
 import { useAgeInMonths } from '@/features/enfant/hooks/useAgeInMonths'
 import { getChildByUserId } from '@/features/enfant/services/childService'
 import { getCurrentUserId } from '@/shared/lib/auth'
+import { DEFAULT_AGE_IN_MONTHS } from '@/features/enfant/constants'
 import OnboardingForm from '@/features/enfant/components/OnboardingForm'
 import ActivitiesView from '@/features/activites/components/ActivitiesView'
 
-export default function HomePageClient() {
+interface Props {
+  isAuthenticated: boolean
+}
+
+export default function HomePageClient({ isAuthenticated }: Props) {
   const child = useChildStore((state) => state.child)
   const setChild = useChildStore((state) => state.setChild)
 
-  // Initialisé à true seulement si le store est vide : sans cet état,
-  // l'onboarding s'afficherait le temps de la requête avant de basculer.
-  const [isLoading, setIsLoading] = useState(child === null)
+  // Initialisé à true seulement s'il y a un profil à aller chercher : sans
+  // cet état, l'onboarding s'afficherait le temps de la requête avant de basculer.
+  const [isLoading, setIsLoading] = useState(isAuthenticated && child === null)
 
   useEffect(() => {
     // Le store survit à la navigation client : inutile de refetch si un
     // enfant est déjà là (ex. retour depuis /favoris, ou juste après l'onboarding).
-    if (child) return
+    // Un visiteur sans compte n'a pas de profil enfant à charger.
+    if (child || !isAuthenticated) return
 
     let cancelled = false
 
@@ -49,7 +56,11 @@ export default function HomePageClient() {
     return () => {
       cancelled = true
     }
-  }, [child, setChild])
+  }, [child, setChild, isAuthenticated])
+
+  if (!isAuthenticated) {
+    return <GuestActivities />
+  }
 
   if (isLoading && !child) {
     return <p className="text-sm text-fg-muted">Chargement…</p>
@@ -103,6 +114,25 @@ function ActivitiesWithAge({ birthDate, name }: { birthDate: Date; name: string 
         <p className="mt-1 text-sm text-fg-muted">{ageInMonths} mois</p>
       </div>
       <ActivitiesView ageInMonths={ageInMonths} />
+    </div>
+  )
+}
+
+function GuestActivities() {
+  return (
+    <div>
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-fg">
+          Activités pour un enfant de {DEFAULT_AGE_IN_MONTHS} mois
+        </h1>
+        <p className="mt-1 text-sm text-fg-muted">
+          <Link href="/register" className="font-medium text-link hover:text-link-hover">
+            Créez un compte
+          </Link>{' '}
+          pour des activités adaptées à l&apos;âge exact de votre enfant.
+        </p>
+      </div>
+      <ActivitiesView ageInMonths={DEFAULT_AGE_IN_MONTHS} />
     </div>
   )
 }

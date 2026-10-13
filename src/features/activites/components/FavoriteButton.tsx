@@ -23,7 +23,7 @@ export default function FavoriteButton({ activityId }: Props) {
       }}
       aria-pressed={active}
       aria-label={active ? 'Retirer des favoris' : 'Ajouter aux favoris'}
-      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/90 text-rose-500 shadow-sm transition-transform active:scale-90"
+      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface/90 text-rose-500 shadow-sm transition-transform active:scale-90"
     >
       <HeartIcon filled={active} />
     </button>

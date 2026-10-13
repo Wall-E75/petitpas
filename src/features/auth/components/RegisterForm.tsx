@@ -36,14 +36,14 @@ export default function RegisterForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-zinc-900">Créer un compte</h1>
-        <p className="mt-2 text-sm text-zinc-500">
+        <h1 className="text-2xl font-bold text-fg">Créer un compte</h1>
+        <p className="mt-2 text-sm text-fg-muted">
           Pour retrouver vos activités favorites
         </p>
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="email" className="text-sm font-medium text-zinc-700">
+        <label htmlFor="email" className="text-sm font-medium text-fg-secondary">
           Email
         </label>
         <input
@@ -55,12 +55,12 @@ export default function RegisterForm() {
           onChange={handleChange}
           required
           placeholder="vous@exemple.fr"
-          className="rounded-lg border border-zinc-200 px-3 py-2 text-sm outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+          className="rounded-lg border border-line bg-surface px-3 py-2 text-sm text-fg outline-none placeholder:text-fg-muted transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30"
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="password" className="text-sm font-medium text-zinc-700">
+        <label htmlFor="password" className="text-sm font-medium text-fg-secondary">
           Mot de passe
         </label>
         <input
@@ -72,12 +72,12 @@ export default function RegisterForm() {
           onChange={handleChange}
           required
           minLength={6}
-          className="rounded-lg border border-zinc-200 px-3 py-2 text-sm outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+          className="rounded-lg border border-line bg-surface px-3 py-2 text-sm text-fg outline-none placeholder:text-fg-muted transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30"
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="confirmPassword" className="text-sm font-medium text-zinc-700">
+        <label htmlFor="confirmPassword" className="text-sm font-medium text-fg-secondary">
           Confirmer le mot de passe
         </label>
         <input
@@ -89,12 +89,12 @@ export default function RegisterForm() {
           onChange={handleChange}
           required
           minLength={6}
-          className="rounded-lg border border-zinc-200 px-3 py-2 text-sm outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+          className="rounded-lg border border-line bg-surface px-3 py-2 text-sm text-fg outline-none placeholder:text-fg-muted transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30"
         />
       </div>
 
       {displayedError && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{displayedError}</p>
+        <p className="rounded-lg bg-danger-soft px-3 py-2 text-sm text-danger">{displayedError}</p>
       )}
 
       <button

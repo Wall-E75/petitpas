@@ -16,10 +16,10 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-zinc-50 px-6 text-center">
-      <p className="text-6xl font-bold text-amber-400">404</p>
-      <h1 className="text-xl font-semibold text-zinc-900">Page introuvable</h1>
-      <p className="max-w-xs text-sm text-zinc-500">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-canvas px-6 text-center">
+      <p className="text-6xl font-bold text-amber-600 dark:text-amber-400">404</p>
+      <h1 className="text-xl font-semibold text-fg">Page introuvable</h1>
+      <p className="max-w-xs text-sm text-fg-muted">
         La page que vous cherchez n&apos;existe pas ou plus.
       </p>
       <Link

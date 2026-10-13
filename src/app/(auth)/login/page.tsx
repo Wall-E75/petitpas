@@ -21,16 +21,16 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   return (
     <>
       {error === 'oauth' && (
-        <p role="alert" className="mb-6 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
+        <p role="alert" className="mb-6 rounded-lg bg-danger-soft px-3 py-2 text-sm text-danger">
           La connexion avec Google a échoué. Veuillez réessayer.
         </p>
       )}
       <LoginForm />
       <AuthDivider />
       <GoogleAuthButton label="Continuer avec Google" />
-      <p className="mt-6 text-center text-sm text-zinc-500">
+      <p className="mt-6 text-center text-sm text-fg-muted">
         Pas encore de compte ?{' '}
-        <Link href="/register" className="font-medium text-amber-600 hover:text-amber-700">
+        <Link href="/register" className="font-medium text-link hover:text-link-hover">
           Créer un compte
         </Link>
       </p>

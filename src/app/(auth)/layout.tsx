@@ -5,9 +5,9 @@
 // BottomTabBar, juste une carte centrée.
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-canvas px-4">
       <div className="w-full max-w-sm">
-        <p className="mb-8 text-center text-lg font-semibold tracking-tight text-zinc-900">
+        <p className="mb-8 text-center text-lg font-semibold tracking-tight text-fg">
           PetitsPas
         </p>
         {children}

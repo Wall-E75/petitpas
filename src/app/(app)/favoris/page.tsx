@@ -46,7 +46,7 @@ export default function FavorisPage() {
     return (
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="h-36 animate-pulse rounded-xl bg-zinc-100" />
+          <div key={i} className="h-36 animate-pulse rounded-xl bg-surface-muted" />
         ))}
       </div>
     )
@@ -54,7 +54,7 @@ export default function FavorisPage() {
 
   if (error) {
     return (
-      <p className="text-sm text-red-500">
+      <p className="text-sm text-danger">
         Impossible de charger vos favoris : {error}
       </p>
     )
@@ -63,8 +63,8 @@ export default function FavorisPage() {
   if (activities.length === 0) {
     return (
       <div className="flex flex-col items-center gap-2 py-16 text-center">
-        <p className="text-lg font-semibold text-zinc-900">Aucun favori pour l&apos;instant</p>
-        <p className="text-sm text-zinc-500">
+        <p className="text-lg font-semibold text-fg">Aucun favori pour l&apos;instant</p>
+        <p className="text-sm text-fg-muted">
           Explorez les activités et appuyez sur le cœur pour les retrouver ici.
         </p>
       </div>

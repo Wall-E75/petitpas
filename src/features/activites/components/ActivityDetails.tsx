@@ -2,9 +2,9 @@ import type { Activity, DifficultyLevel, DevelopmentArea } from '@/features/acti
 import FavoriteButton from '@/features/activites/components/FavoriteButton'
 
 const difficultyConfig: Record<DifficultyLevel, { label: string; className: string }> = {
-  facile: { label: 'Facile', className: 'bg-green-100 text-green-700' },
-  moyen: { label: 'Moyen', className: 'bg-orange-100 text-orange-700' },
-  avance: { label: 'Avancé', className: 'bg-red-100 text-red-700' },
+  facile: { label: 'Facile', className: 'bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-300' },
+  moyen: { label: 'Moyen', className: 'bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300' },
+  avance: { label: 'Avancé', className: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300' },
 }
 
 const developmentAreaLabels: Record<DevelopmentArea, string> = {
@@ -27,7 +27,7 @@ export default function ActivityDetails({ activity }: Props) {
     <div className="max-w-2xl mx-auto px-4 py-8">
       <div className="flex items-start justify-between gap-4 mb-2">
         <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-bold text-zinc-900">{activity.title}</h1>
+          <h1 className="text-2xl font-bold text-fg">{activity.title}</h1>
           <FavoriteButton activityId={activity.id} />
         </div>
         <span className={`shrink-0 rounded-full px-3 py-1 text-sm font-medium ${className}`}>
@@ -35,16 +35,16 @@ export default function ActivityDetails({ activity }: Props) {
         </span>
       </div>
 
-      <p className="text-sm text-zinc-500 mb-6">{activity.duration} min</p>
+      <p className="text-sm text-fg-muted mb-6">{activity.duration} min</p>
 
-      <p className="text-zinc-700 leading-relaxed mb-8">{activity.description}</p>
+      <p className="text-fg-secondary leading-relaxed mb-8">{activity.description}</p>
 
       {activity.materials.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-sm font-semibold text-zinc-900 mb-2">Matériaux</h2>
+          <h2 className="text-sm font-semibold text-fg mb-2">Matériaux</h2>
           <ul className="list-disc list-inside space-y-1">
             {activity.materials.map((m) => (
-              <li key={m} className="text-sm text-zinc-600">{m}</li>
+              <li key={m} className="text-sm text-fg-secondary">{m}</li>
             ))}
           </ul>
         </section>
@@ -52,10 +52,10 @@ export default function ActivityDetails({ activity }: Props) {
 
       {activity.benefits.length > 0 && (
         <section className="mb-8">
-          <h2 className="text-sm font-semibold text-zinc-900 mb-2">Bénéfices</h2>
+          <h2 className="text-sm font-semibold text-fg mb-2">Bénéfices</h2>
           <div className="flex flex-wrap gap-2">
             {activity.benefits.map((b) => (
-              <span key={b} className="rounded-full bg-amber-50 px-3 py-1 text-xs text-amber-800">
+              <span key={b} className="rounded-full bg-amber-50 px-3 py-1 text-xs text-amber-800 dark:bg-amber-950 dark:text-amber-200">
                 {developmentAreaLabels[b]}
               </span>
             ))}

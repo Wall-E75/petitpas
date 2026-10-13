@@ -14,9 +14,9 @@ export default function RegisterPage() {
       <RegisterForm />
       <AuthDivider />
       <GoogleAuthButton label="S'inscrire avec Google" />
-      <p className="mt-6 text-center text-sm text-zinc-500">
+      <p className="mt-6 text-center text-sm text-fg-muted">
         Déjà un compte ?{' '}
-        <Link href="/login" className="font-medium text-amber-600 hover:text-amber-700">
+        <Link href="/login" className="font-medium text-link hover:text-link-hover">
           Se connecter
         </Link>
       </p>

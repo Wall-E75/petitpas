@@ -6,9 +6,9 @@ import FavoriteButton from '@/features/activites/components/FavoriteButton'
 // next/link est utilisable dans les Server Components — il n'exige pas 'use client'.
 
 const difficultyConfig: Record<DifficultyLevel, { label: string; className: string }> = {
-  facile: { label: 'Facile', className: 'bg-green-100 text-green-700' },
-  moyen:  { label: 'Moyen',  className: 'bg-orange-100 text-orange-700' },
-  avance: { label: 'Avancé', className: 'bg-red-100 text-red-700' },
+  facile: { label: 'Facile', className: 'bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-300' },
+  moyen:  { label: 'Moyen',  className: 'bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300' },
+  avance: { label: 'Avancé', className: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300' },
 }
 // Record<DifficultyLevel, ...> garantit que les 3 valeurs sont toutes couvertes.
 // TypeScript erreur si on en oublie une — c'est un exhaustiveness check implicite.
@@ -27,9 +27,9 @@ export default function ActivityCard({ activity }: Props) {
 
   return (
     <Link href={`/activites/${activity.id}`} className="block">
-    <div className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
+    <div className="flex flex-col gap-3 rounded-xl border border-line bg-surface p-4 shadow-sm transition-shadow hover:shadow-md">
       <div className="flex items-start justify-between gap-2">
-        <h2 className="text-base font-semibold leading-snug text-zinc-900">
+        <h2 className="text-base font-semibold leading-snug text-fg">
           {activity.title}
         </h2>
         <div className="flex shrink-0 items-center gap-2">
@@ -40,9 +40,9 @@ export default function ActivityCard({ activity }: Props) {
         </div>
       </div>
 
-      <p className="text-sm leading-relaxed text-zinc-600">{description}</p>
+      <p className="text-sm leading-relaxed text-fg-secondary">{description}</p>
 
-      <p className="text-xs text-zinc-400">{activity.duration} min</p>
+      <p className="text-xs text-fg-muted">{activity.duration} min</p>
     </div>
     </Link>
   )

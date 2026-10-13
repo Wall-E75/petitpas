@@ -25,7 +25,7 @@ export default function BottomTabBar() {
   return (
     <nav
       aria-label="Navigation principale"
-      className="fixed inset-x-0 bottom-0 z-10 flex border-t bg-white pb-[env(safe-area-inset-bottom)] md:hidden"
+      className="fixed inset-x-0 bottom-0 z-10 flex border-t border-line bg-surface pb-[env(safe-area-inset-bottom)] md:hidden"
     >
       {NAV_ITEMS.map(item => {
         const active = pathname === item.href
@@ -35,7 +35,7 @@ export default function BottomTabBar() {
             href={item.href}
             aria-current={active ? 'page' : undefined}
             className={`flex flex-1 flex-col items-center gap-1 py-2 text-xs font-medium transition-colors ${
-              active ? 'text-emerald-600' : 'text-zinc-500'
+              active ? 'text-emerald-700 dark:text-emerald-400' : 'text-fg-muted'
             }`}
           >
             <item.icon filled={active} />

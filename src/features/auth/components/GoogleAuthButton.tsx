@@ -18,13 +18,13 @@ export default function GoogleAuthButton({ label }: GoogleAuthButtonProps) {
         type="button"
         onClick={() => signIn('google')}
         disabled={isLoading}
-        className="flex items-center justify-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-50"
+        className="flex items-center justify-center gap-2 rounded-lg border border-line bg-surface px-4 py-2.5 text-sm font-semibold text-fg-secondary transition-colors hover:bg-surface-muted disabled:opacity-50"
       >
         <GoogleIcon />
         {isLoading ? 'Redirection…' : label}
       </button>
       {error && (
-        <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
+        <p role="alert" className="rounded-lg bg-danger-soft px-3 py-2 text-sm text-danger">
           {error}
         </p>
       )}

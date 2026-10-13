@@ -20,7 +20,7 @@ export default function ActivitiesView({ ageInMonths }: Props) {
     return (
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="h-36 animate-pulse rounded-xl bg-zinc-100" />
+          <div key={i} className="h-36 animate-pulse rounded-xl bg-surface-muted" />
         ))}
       </div>
     )
@@ -28,7 +28,7 @@ export default function ActivitiesView({ ageInMonths }: Props) {
 
   if (error) {
     return (
-      <p className="text-sm text-red-500">
+      <p className="text-sm text-danger">
         Impossible de charger les activités : {error}
       </p>
     )
@@ -36,7 +36,7 @@ export default function ActivitiesView({ ageInMonths }: Props) {
 
   if (activities.length === 0) {
     return (
-      <p className="text-sm text-zinc-500">
+      <p className="text-sm text-fg-muted">
         Aucune activité trouvée pour cet âge. Revenez bientôt !
       </p>
     )

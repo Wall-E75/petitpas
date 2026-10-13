@@ -1,26 +1,59 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  /* Indique au navigateur que la page supporte les deux thèmes : les contrôles
+     natifs (date picker, scrollbars, autofill) suivent alors le thème actif. */
+  color-scheme: light dark;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --canvas: #fafafa;
+  --surface: #ffffff;
+  --surface-muted: #f4f4f5;
+  --line: #e4e4e7;
+  --fg: #18181b;
+  --fg-secondary: #3f3f46;
+  --fg-muted: #71717a;
+  --link: #b45309;
+  --link-hover: #92400e;
+  --danger: #b91c1c;
+  --danger-soft: #fef2f2;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --canvas: #09090b;
+    --surface: #18181b;
+    --surface-muted: #27272a;
+    --line: #3f3f46;
+    --fg: #fafafa;
+    --fg-secondary: #d4d4d8;
+    --fg-muted: #a1a1aa;
+    --link: #fbbf24;
+    --link-hover: #fcd34d;
+    --danger: #f87171;
+    --danger-soft: #450a0a;
   }
 }
 
+/* `inline` fait pointer les classes Tailwind directement sur les variables
+   ci-dessus : changer de thème ne demande aucune classe supplémentaire. */
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-line: var(--line);
+  --color-fg: var(--fg);
+  --color-fg-secondary: var(--fg-secondary);
+  --color-fg-muted: var(--fg-muted);
+  --color-link: var(--link);
+  --color-link-hover: var(--link-hover);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--canvas);
+  color: var(--fg);
   font-family: Arial, Helvetica, sans-serif;
 }

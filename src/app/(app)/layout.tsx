@@ -15,13 +15,13 @@ import LogoutButton from '@/features/auth/components/LogoutButton'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-zinc-50">
-      <header className="flex items-center justify-between border-b bg-white px-4 py-3">
-        <span className="font-semibold tracking-tight text-zinc-900">PetitsPas</span>
+    <div className="min-h-screen bg-canvas">
+      <header className="flex items-center justify-between border-b border-line bg-surface px-4 py-3">
+        <span className="font-semibold tracking-tight text-fg">PetitsPas</span>
         <div className="flex items-center gap-4">
-          <nav className="hidden gap-4 text-sm font-medium text-zinc-600 md:flex">
-            <Link href="/" className="hover:text-zinc-900">Activités</Link>
-            <Link href="/favoris" className="hover:text-zinc-900">Favoris</Link>
+          <nav className="hidden gap-4 text-sm font-medium text-fg-secondary md:flex">
+            <Link href="/" className="hover:text-fg">Activités</Link>
+            <Link href="/favoris" className="hover:text-fg">Favoris</Link>
           </nav>
           <LogoutButton />
         </div>

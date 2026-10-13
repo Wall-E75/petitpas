@@ -10,7 +10,7 @@ export default function LogoutButton() {
   return (
     <div className="flex items-center gap-2">
       {error && (
-        <span role="alert" className="text-xs text-red-600">
+        <span role="alert" className="text-xs text-danger">
           {error}
         </span>
       )}
@@ -18,7 +18,7 @@ export default function LogoutButton() {
         type="button"
         onClick={logout}
         disabled={isLoading}
-        className="text-sm font-medium text-zinc-600 hover:text-zinc-900 disabled:opacity-50"
+        className="text-sm font-medium text-fg-secondary hover:text-fg disabled:opacity-50"
       >
         {isLoading ? 'Déconnexion…' : 'Se déconnecter'}
       </button>

@@ -41,15 +41,15 @@ export default function OnboardingForm() {
     <div className="flex min-h-[60vh] items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold text-zinc-900">Bienvenue sur PetitsPas</h1>
-          <p className="mt-2 text-sm text-zinc-500">
+          <h1 className="text-2xl font-bold text-fg">Bienvenue sur PetitsPas</h1>
+          <p className="mt-2 text-sm text-fg-muted">
             Commençons par le profil de votre enfant
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="name" className="text-sm font-medium text-zinc-700">
+            <label htmlFor="name" className="text-sm font-medium text-fg-secondary">
               Prénom de l'enfant
             </label>
             <input
@@ -60,12 +60,12 @@ export default function OnboardingForm() {
               onChange={handleChange}
               required
               placeholder="Emma"
-              className="rounded-lg border border-zinc-200 px-3 py-2 text-sm outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+              className="rounded-lg border border-line bg-surface px-3 py-2 text-sm text-fg outline-none placeholder:text-fg-muted transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30"
             />
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="birthDate" className="text-sm font-medium text-zinc-700">
+            <label htmlFor="birthDate" className="text-sm font-medium text-fg-secondary">
               Date de naissance
             </label>
             <input
@@ -76,12 +76,12 @@ export default function OnboardingForm() {
               onChange={handleChange}
               required
               max={today}
-              className="rounded-lg border border-zinc-200 px-3 py-2 text-sm outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+              className="rounded-lg border border-line bg-surface px-3 py-2 text-sm text-fg outline-none placeholder:text-fg-muted transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30"
             />
           </div>
 
           {error && (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>
+            <p className="rounded-lg bg-danger-soft px-3 py-2 text-sm text-danger">{error}</p>
           )}
 
           <button

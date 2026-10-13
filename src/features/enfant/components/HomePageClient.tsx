@@ -52,7 +52,7 @@ export default function HomePageClient() {
   }, [child, setChild])
 
   if (isLoading && !child) {
-    return <p className="text-sm text-zinc-500">Chargement…</p>
+    return <p className="text-sm text-fg-muted">Chargement…</p>
   }
 
   // AnimatePresence anime aussi les sorties : sans lui, OnboardingForm
@@ -97,10 +97,10 @@ function ActivitiesWithAge({ birthDate, name }: { birthDate: Date; name: string 
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-zinc-900">
+        <h1 className="text-2xl font-bold text-fg">
           Activités pour {name}
         </h1>
-        <p className="mt-1 text-sm text-zinc-500">{ageInMonths} mois</p>
+        <p className="mt-1 text-sm text-fg-muted">{ageInMonths} mois</p>
       </div>
       <ActivitiesView ageInMonths={ageInMonths} />
     </div>

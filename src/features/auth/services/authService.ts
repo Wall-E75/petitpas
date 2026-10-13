@@ -30,10 +30,11 @@ export async function signInWithOAuth(provider: OAuthProvider): Promise<void> {
   const { error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      // L'origine est lue à l'exécution pour que la même build fonctionne en
-      // local et en production. Cette URL doit figurer dans les "Redirect URLs"
-      // du dashboard Supabase, sinon Supabase la remplace par la Site URL.
-      redirectTo: `${window.location.origin}/auth/callback`,
+      // NEXT_PUBLIC_SITE_URL fixe l'URL en production ; sans elle on retombe
+      // sur l'origine courante (localhost en dev). Cette URL doit figurer dans
+      // les "Redirect URLs" du dashboard Supabase, sinon Supabase la remplace
+      // par la Site URL.
+      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin}/auth/callback`,
     },
   })
 

@@ -50,7 +50,7 @@ export default function OnboardingForm() {
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div className="flex flex-col gap-1.5">
             <label htmlFor="name" className="text-sm font-medium text-fg-secondary">
-              Prénom de l'enfant
+              Prénom de l&apos;enfant
             </label>
             <input
               id="name"
